@@ -1,0 +1,24 @@
+<svg width="1080" height="1080" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1080" height="1080" fill="#0a0a0a"/>
+  <!-- Top accent -->
+  <rect x="0" y="0" width="1080" height="6" fill="#c9a84c"/>
+  <!-- Logo -->
+  <text x="80" y="100" fill="#c9a84c" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="600">♾️ HUB LENDÁRIO {CIDADE}</text>
+  <!-- Photo area placeholder -->
+  <rect x="80" y="150" width="920" height="480" rx="12" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/>
+  <text x="540" y="400" text-anchor="middle" fill="#888888" font-family="Inter, system-ui, sans-serif" font-size="22">📸 Foto do encontro aqui</text>
+  <!-- Format badge -->
+  <rect x="80" y="670" width="240" height="40" rx="20" fill="rgba(201,168,76,0.15)"/>
+  <text x="200" y="696" text-anchor="middle" fill="#c9a84c" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700" letter-spacing="2">ENCONTRO INSIDE</text>
+  <!-- Title - EDITABLE -->
+  <text x="80" y="770" fill="#f5f5f5" font-family="Inter, system-ui, sans-serif" font-weight="800" font-size="40">Tema do Encontro</text>
+  <!-- Date and location -->
+  <text x="80" y="830" fill="#888888" font-family="Inter, system-ui, sans-serif" font-size="22">📅 Sábado, 12 de Abril · 📍 Local, Cidade</text>
+  <!-- Description - EDITABLE -->
+  <text x="80" y="900" fill="#888888" font-family="Inter, system-ui, sans-serif" font-size="20">Breve descrição do que aconteceu no encontro.</text>
+  <text x="80" y="930" fill="#888888" font-family="Inter, system-ui, sans-serif" font-size="20">Temas discutidos, insights e momentos marcantes.</text>
+  <!-- Footer -->
+  <text x="80" y="1020" fill="#888888" font-family="Inter, system-ui, sans-serif" font-size="16">Comunidade de IA · Conectando o artificial ao natural</text>
+  <!-- Bottom accent -->
+  <rect x="0" y="1074" width="1080" height="6" fill="#c9a84c"/>
+</svg>

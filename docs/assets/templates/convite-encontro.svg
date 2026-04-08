@@ -1,0 +1,29 @@
+<svg width="1080" height="1080" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1080" height="1080" fill="#0a0a0a"/>
+  <!-- Background accent -->
+  <rect x="0" y="0" width="1080" height="6" fill="#c9a84c"/>
+  <!-- Logo area -->
+  <text x="80" y="120" fill="#c9a84c" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="600">♾️ HUB LENDÁRIO</text>
+  <!-- Format badge -->
+  <rect x="80" y="200" width="280" height="44" rx="22" fill="rgba(201,168,76,0.15)"/>
+  <text x="220" y="228" text-anchor="middle" fill="#c9a84c" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700" letter-spacing="2">ENCONTRO INSIDE</text>
+  <!-- Main title - EDITABLE -->
+  <text x="80" y="340" fill="#f5f5f5" font-family="Inter, system-ui, sans-serif" font-weight="800" font-size="56">Tema do</text>
+  <text x="80" y="410" fill="#f5f5f5" font-family="Inter, system-ui, sans-serif" font-weight="800" font-size="56">Encontro Aqui</text>
+  <!-- Divider -->
+  <rect x="80" y="450" width="60" height="3" rx="2" fill="#c9a84c"/>
+  <!-- Info blocks -->
+  <text x="80" y="540" fill="#c9a84c" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="600">📅 DATA</text>
+  <text x="80" y="575" fill="#f5f5f5" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="500">Sábado, 12 de Abril</text>
+  <text x="80" y="650" fill="#c9a84c" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="600">🕐 HORÁRIO</text>
+  <text x="80" y="685" fill="#f5f5f5" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="500">14h às 16h</text>
+  <text x="80" y="760" fill="#c9a84c" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="600">📍 LOCAL</text>
+  <text x="80" y="795" fill="#f5f5f5" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="500">Nome do Local, Cidade</text>
+  <!-- CTA -->
+  <rect x="80" y="880" width="360" height="60" rx="8" fill="#c9a84c"/>
+  <text x="260" y="918" text-anchor="middle" fill="#0a0a0a" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="700">Junte-se ao encontro →</text>
+  <!-- Footer -->
+  <text x="80" y="1020" fill="#888888" font-family="Inter, system-ui, sans-serif" font-size="16">Comunidade de IA · Conectando o artificial ao natural</text>
+  <!-- Bottom accent -->
+  <rect x="0" y="1074" width="1080" height="6" fill="#c9a84c"/>
+</svg>

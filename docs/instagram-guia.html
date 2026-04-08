@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instagram dos HUBs — Hub Lendário</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-dark: #0a0a0a;
+      --bg-dark-alt: #111111;
+      --bg-light: #fafafa;
+      --bg-card-dark: #1a1a1a;
+      --bg-card-light: #ffffff;
+      --text-dark: #0a0a0a;
+      --text-light: #f5f5f5;
+      --text-muted: #888888;
+      --text-muted-light: #666666;
+      --accent: #c9a84c;
+      --accent-dim: rgba(201, 168, 76, 0.15);
+      --border-dark: #2a2a2a;
+      --border-light: #e5e5e5;
+      --red: #e74c3c;
+      --green: #27ae60;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--text-light);
+      background: var(--bg-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,10,10,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-dark);
+      padding: 16px 0;
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; }
+    .nav-brand span { font-size: 1.4rem; }
+    .nav-link { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
+    .nav-link:hover { color: var(--accent); }
+
+    /* SECTIONS */
+    .section { padding: 80px 24px; }
+    .section-inner { max-width: 900px; margin: 0 auto; }
+    .section-dark { background: var(--bg-dark); color: var(--text-light); }
+    .section-darker { background: var(--bg-dark-alt); color: var(--text-light); }
+    .section-light { background: var(--bg-light); color: var(--text-dark); }
+
+    .section-label {
+      text-transform: uppercase; font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 2px; color: var(--accent); margin-bottom: 12px;
+    }
+    .section-title { font-size: 2rem; font-weight: 800; margin-bottom: 16px; line-height: 1.2; }
+    .section-subtitle { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 40px; max-width: 650px; }
+    .section-light .section-subtitle { color: var(--text-muted-light); }
+
+    /* HERO */
+    .hero { padding: 160px 24px 80px; text-align: center; }
+    .hero .section-title { font-size: 2.6rem; max-width: 700px; margin: 0 auto 20px; }
+    .hero .section-subtitle { margin: 0 auto 48px; text-align: center; }
+
+    .stats { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; }
+    .stat { text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: 800; color: var(--accent); }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+    /* HIGHLIGHT */
+    .highlight {
+      background: var(--accent-dim); border-left: 3px solid var(--accent);
+      padding: 20px 24px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin: 32px 0; font-style: italic; font-size: 1.05rem; line-height: 1.5;
+    }
+    .section-light .highlight { background: rgba(201, 168, 76, 0.1); }
+
+    /* CARDS GRID */
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 32px; }
+    .cards-grid-2 { grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); }
+    .cards-grid-1 { grid-template-columns: 1fr; }
+
+    .card {
+      background: var(--bg-card-dark); border: 1px solid var(--border-dark);
+      border-radius: var(--radius); padding: 28px; transition: border-color 0.2s;
+    }
+    .card:hover { border-color: var(--accent); }
+    .section-light .card { background: var(--bg-card-light); border-color: var(--border-light); }
+    .section-light .card:hover { border-color: var(--accent); }
+
+    .card-icon {
+      width: 44px; height: 44px; border-radius: 10px; background: var(--accent-dim);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: var(--accent);
+    }
+    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+    .card-body { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+    .section-light .card-body { color: var(--text-muted-light); }
+
+    .card-tag {
+      display: inline-block; background: var(--accent-dim); color: var(--accent);
+      font-size: 0.7rem; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;
+    }
+
+    /* BIO BLOCK */
+    .bio-block {
+      background: var(--bg-dark-alt); border: 1px solid var(--border-dark);
+      border-radius: var(--radius); padding: 24px 28px;
+      font-family: 'Inter', sans-serif; font-size: 0.95rem; line-height: 1.8;
+      margin: 16px 0; white-space: pre-line;
+    }
+    .section-light .bio-block { background: #f0f0f0; border-color: var(--border-light); }
+
+    /* TABLES */
+    .table-wrap { overflow-x: auto; margin: 20px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    th { text-align: left; padding: 12px 16px; border-bottom: 2px solid var(--border-dark); font-weight: 600; color: var(--accent); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+    td { padding: 12px 16px; border-bottom: 1px solid var(--border-dark); color: var(--text-muted); }
+    .section-light th { border-color: var(--border-light); }
+    .section-light td { border-color: var(--border-light); color: var(--text-muted-light); }
+    td strong { color: var(--text-light); }
+    .section-light td strong { color: var(--text-dark); }
+
+    /* CODE / MONO */
+    code {
+      background: rgba(201, 168, 76, 0.1); color: var(--accent);
+      padding: 2px 8px; border-radius: 4px; font-size: 0.85rem; font-family: 'SF Mono', monospace;
+    }
+    .section-light code { background: rgba(201, 168, 76, 0.12); }
+
+    /* CHECKLIST */
+    .checklist { list-style: none; margin: 24px 0; }
+    .checklist-group-title { font-weight: 700; font-size: 0.95rem; margin: 24px 0 12px; color: var(--accent); }
+    .checklist li {
+      display: flex; align-items: flex-start; gap: 12px; padding: 10px 0;
+      border-bottom: 1px solid var(--border-dark); font-size: 0.9rem;
+    }
+    .section-light .checklist li { border-color: var(--border-light); }
+    .check-box {
+      width: 20px; height: 20px; min-width: 20px; border: 2px solid var(--border-dark);
+      border-radius: 4px; margin-top: 2px;
+    }
+    .section-light .check-box { border-color: var(--border-light); }
+
+    /* DONT LIST */
+    .dont-list { list-style: none; margin: 24px 0; counter-reset: dont; }
+    .dont-item {
+      display: flex; gap: 16px; padding: 20px 0;
+      border-bottom: 1px solid var(--border-dark); align-items: flex-start;
+    }
+    .dont-number {
+      background: rgba(231, 76, 60, 0.15); color: var(--red);
+      width: 32px; height: 32px; min-width: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.8rem;
+    }
+    .dont-title { font-weight: 700; margin-bottom: 4px; }
+    .dont-desc { font-size: 0.9rem; color: var(--text-muted); }
+
+    /* FLOW STEPS */
+    .flow-steps { display: flex; flex-direction: column; gap: 0; margin: 24px 0; }
+    .flow-step {
+      display: flex; align-items: flex-start; gap: 16px; padding: 16px 0; position: relative;
+    }
+    .flow-step::before {
+      content: ''; position: absolute; left: 15px; top: 48px; bottom: -16px;
+      width: 2px; background: var(--border-dark);
+    }
+    .flow-step:last-child::before { display: none; }
+    .flow-num {
+      width: 32px; height: 32px; min-width: 32px; border-radius: 50%;
+      background: var(--accent-dim); color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem; z-index: 1;
+    }
+    .flow-text { font-size: 0.9rem; color: var(--text-muted); padding-top: 5px; }
+
+    /* TONE TABLE */
+    .tone-table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+    .tone-table td { padding: 14px 20px; font-size: 0.9rem; vertical-align: top; }
+    .tone-table tr { border-bottom: 1px solid var(--border-dark); }
+    .section-light .tone-table tr { border-bottom: 1px solid var(--border-light); }
+    .tone-yes { color: var(--green); }
+    .tone-no { color: var(--red); }
+
+    /* CALENDAR */
+    .calendar { margin: 24px 0; }
+    .cal-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-dark); gap: 16px; }
+    .cal-day { width: 100px; min-width: 100px; font-weight: 700; font-size: 0.85rem; }
+    .cal-content { font-size: 0.9rem; color: var(--text-muted); flex: 1; }
+    .cal-badge {
+      font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: 600; white-space: nowrap;
+    }
+    .cal-suggested { background: rgba(201, 168, 76, 0.15); color: var(--accent); }
+    .cal-free { background: rgba(136, 136, 136, 0.15); color: var(--text-muted); }
+
+    /* CTA */
+    .cta-section { text-align: center; padding: 100px 24px; }
+    .cta-section .section-title { max-width: 500px; margin: 0 auto 16px; }
+    .cta-section .section-subtitle { margin: 0 auto 40px; text-align: center; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px;
+      border-radius: 8px; font-weight: 600; font-size: 0.95rem; text-decoration: none;
+      transition: all 0.2s; cursor: pointer; border: none;
+    }
+    .btn-primary { background: var(--accent); color: var(--bg-dark); }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-secondary { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+    .btn-secondary:hover { background: var(--accent-dim); }
+    .btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    /* FOOTER */
+    .footer {
+      padding: 40px 24px; border-top: 1px solid var(--border-dark);
+      text-align: center; font-size: 0.85rem; color: var(--text-muted);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 640px) {
+      .hero .section-title { font-size: 1.8rem; }
+      .section-title { font-size: 1.5rem; }
+      .stats { gap: 32px; }
+      .cards-grid, .cards-grid-2 { grid-template-columns: 1fr; }
+      .hero { padding: 120px 24px 60px; }
+      .section { padding: 60px 24px; }
+      .tone-table td { display: block; padding: 8px 0; }
+      .cal-row { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand"><span>♾️</span> Hub Lendário</div>
+    <a href="https://hub-lendario-beryl.vercel.app/embaixadores" class="nav-link">Voltar para Embaixadores</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero section-dark">
+  <div class="section-inner">
+    <div class="section-label">Instagram dos HUBs</div>
+    <h1 class="section-title">A identidade do Movimento na palma da mão</h1>
+    <p class="section-subtitle">Seu Hub tem voz própria, mas fala a mesma língua. Este guia garante que todo Hub Lendário no Instagram carregue a essência do Movimento — uma comunidade de IA que conecta o artificial ao natural.</p>
+    <div class="stats">
+      <div class="stat"><div class="stat-value">55</div><div class="stat-label">Hubs</div></div>
+      <div class="stat"><div class="stat-value">15+</div><div class="stat-label">Embaixadores ativos</div></div>
+      <div class="stat"><div class="stat-value">3</div><div class="stat-label">Países</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- POR QUE PADRONIZAR -->
+<section class="section section-darker">
+  <div class="section-inner">
+    <div class="section-label">Identidade</div>
+    <h2 class="section-title">Um movimento, uma identidade</h2>
+    <p class="section-subtitle">Quando alguém encontra um Hub Lendário no Instagram — seja em Floripa, Belém ou Porto Alegre — precisa sentir que faz parte da mesma coisa. Não é sobre limitar sua criatividade. É sobre garantir que qualquer pessoa reconheça o Movimento de primeira.</p>
+    <div class="highlight">Padronizar não é uniformizar. É garantir que o Lendário seja reconhecido em qualquer cidade.</div>
+  </div>
+</section>
+
+<!-- CONFIGURAÇÃO DO PERFIL -->
+<section class="section section-light">
+  <div class="section-inner">
+    <div class="section-label">Seu Perfil</div>
+    <h2 class="section-title">Configurando seu Instagram do zero</h2>
+    <p class="section-subtitle">Copie, cole e adapte apenas o que está marcado. O resto é fixo.</p>
+
+    <div class="cards-grid cards-grid-2">
+      <!-- Username -->
+      <div class="card">
+        <div class="card-icon"><i data-lucide="at-sign" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Username</div>
+        <div class="card-body">
+          <code>@hublendario{cidade}</code> — tudo junto, minúsculo, sem acentos, sem hífens.
+          <div class="table-wrap" style="margin-top:12px">
+            <table>
+              <tr><td><strong>Porto Alegre</strong></td><td><code>@hublendarioportoalegre</code></td></tr>
+              <tr><td><strong>Florianópolis</strong></td><td><code>@hublendariofloripa</code></td></tr>
+              <tr><td><strong>São Paulo</strong></td><td><code>@hublendariosp</code></td></tr>
+              <tr><td><strong>Rio de Janeiro</strong></td><td><code>@hublendariorj</code></td></tr>
+              <tr><td><strong>Belém</strong></td><td><code>@hublendariobelem</code></td></tr>
+              <tr><td><strong>Belo Horizonte</strong></td><td><code>@hublendariobh</code></td></tr>
+            </table>
+          </div>
+          <p style="margin-top:12px;font-size:0.82rem">Cidades com nome longo: use a abreviação mais conhecida localmente. Na dúvida, pergunte no grupo.</p>
+        </div>
+      </div>
+
+      <!-- Nome de Exibição -->
+      <div class="card">
+        <div class="card-icon"><i data-lucide="user" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Nome de Exibição</div>
+        <div class="card-body">
+          Formato fixo: <code>Hub Lendário {Cidade} ♾️</code>
+          <div style="margin-top:12px;line-height:2">
+            Hub Lendário Porto Alegre ♾️<br>
+            Hub Lendário Floripa ♾️<br>
+            Hub Lendário São Paulo ♾️
+          </div>
+          <p style="margin-top:12px;font-size:0.82rem">O ♾️ no final é obrigatório — representa a conexão infinita entre o artificial e o natural.</p>
+        </div>
+      </div>
+
+      <!-- Foto de Perfil -->
+      <div class="card">
+        <div class="card-icon"><i data-lucide="image" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Foto de Perfil</div>
+        <div class="card-body">
+          Logo do Hub Lendário (escudo ♾️) + nome da cidade em branco, fundo preto.
+          <ul style="margin-top:12px;padding-left:18px;line-height:2">
+            <li>Fundo: preto sólido (#000000)</li>
+            <li>Logo: escudo Hub Lendário em cinza</li>
+            <li>Texto: cidade em branco, sem serifa, centralizado</li>
+            <li>Resolução: 320x320px mínimo</li>
+          </ul>
+          <p style="margin-top:12px;font-size:0.82rem">Baixe o template nos Assets e edite apenas o nome da cidade.</p>
+        </div>
+      </div>
+
+      <!-- Bio -->
+      <div class="card">
+        <div class="card-icon"><i data-lucide="file-text" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Bio</div>
+        <div class="card-body">
+          Formato fixo — substitua apenas <code>{Cidade}</code>:
+          <div class="bio-block">♾️ Hub Lendário {Cidade}
+🤖 Comunidade de Inteligência Artificial
+🌱 Conectando o artificial ao natural
+📍 {Cidade} · Encontros presenciais
+👇 Junte-se ao movimento</div>
+          <p style="font-size:0.82rem">Não coloque: nome pessoal, emojis diferentes, frases motivacionais, links de afiliado ou projetos próprios.</p>
+        </div>
+      </div>
+
+      <!-- Link na Bio -->
+      <div class="card">
+        <div class="card-icon"><i data-lucide="link" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Link na Bio</div>
+        <div class="card-body">
+          <strong>Padrão:</strong> Link direto para o site do Hub Lendário.<br><br>
+          <strong>Se aprovado (Linktree):</strong><br>
+          <ol style="padding-left:18px;line-height:2;margin-top:8px">
+            <li>Link para o site do Hub Lendário (primeiro)</li>
+            <li>Grupo do WhatsApp da cidade</li>
+            <li>Formulário de inscrição</li>
+          </ol>
+          <p style="margin-top:12px;font-size:0.82rem">O link do Movimento sempre vem primeiro. Nunca direcione para páginas pessoais.</p>
+        </div>
+      </div>
+
+      <!-- Categoria -->
+      <div class="card">
+        <div class="card-icon"><i data-lucide="tag" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Categoria do Perfil</div>
+        <div class="card-body">
+          <strong>Tipo:</strong> Profissional (Criador de conteúdo ou Empresa)<br>
+          <strong>Categoria:</strong> <code>Comunidade</code> ou <code>Educação</code><br><br>
+          <p style="font-size:0.82rem">Contas pessoais não têm acesso a métricas. Converta para profissional.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GESTÃO DE ACESSO -->
+<section class="section section-dark">
+  <div class="section-inner">
+    <div class="section-label">Acesso</div>
+    <h2 class="section-title">A conta é do Movimento, não sua</h2>
+    <p class="section-subtitle">Você cria, você opera, mas o Hub Lendário pertence ao Movimento. Se você pausar ou encerrar seu mandato, o próximo embaixador continua de onde você parou.</p>
+    <div class="highlight">O perfil fica. Você passa o bastão.</div>
+
+    <div class="cards-grid cards-grid-2" style="margin-top:40px">
+      <!-- Email -->
+      <div class="card">
+        <div class="card-icon"><i data-lucide="mail" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Email do Hub</div>
+        <div class="card-body">
+          Formato: <code>hublendario{cidade}@gmail.com</code>
+          <div class="table-wrap" style="margin-top:12px">
+            <table>
+              <tr><td><strong>Porto Alegre</strong></td><td><code>hublendarioportoalegre@gmail.com</code></td></tr>
+              <tr><td><strong>Floripa</strong></td><td><code>hublendariofloripa@gmail.com</code></td></tr>
+              <tr><td><strong>São Paulo</strong></td><td><code>hublendariosp@gmail.com</code></td></tr>
+            </table>
+          </div>
+          <ul style="margin-top:12px;padding-left:18px;line-height:2;font-size:0.85rem">
+            <li>Email de recuperação: email central do Movimento</li>
+            <li>Telefone de recuperação: <strong>não vincular</strong> ao celular pessoal</li>
+            <li>2FA: desativada ou com acesso compartilhado</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Níveis de Acesso -->
+      <div class="card">
+        <div class="card-icon"><i data-lucide="shield" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Níveis de Acesso</div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Pessoa</th><th>Email</th><th>Senha IG</th><th>Publica</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Responsável central</strong></td><td>Sim</td><td>Sim</td><td>Emergência</td></tr>
+                <tr><td><strong>Embaixador</strong></td><td>Sim</td><td>Sim</td><td>Sim</td></tr>
+                <tr><td><strong>Conselheiro(s)</strong></td><td>Não</td><td>Sim</td><td>Sim</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="margin-top:12px;font-size:0.82rem">O conselheiro só precisa logar no Instagram. O email é a chave-mestra.</p>
+        </div>
+      </div>
+
+      <!-- Envio de Credenciais -->
+      <div class="card">
+        <div class="card-icon"><i data-lucide="send" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Envio de Credenciais</div>
+        <div class="card-body">
+          Após criar o email e o Instagram, envie:
+          <div class="table-wrap" style="margin-top:12px">
+            <table>
+              <thead><tr><th>Item</th><th>Para quem</th></tr></thead>
+              <tbody>
+                <tr><td>Email + senha Gmail</td><td>Responsável central</td></tr>
+                <tr><td>Senha Instagram</td><td>Responsável + conselheiro(s)</td></tr>
+                <tr><td>Confirmação de email de recuperação</td><td>Responsável central</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="margin-top:12px;font-size:0.82rem">Envie via canal seguro do onboarding. Nunca poste credenciais em grupos.</p>
+        </div>
+      </div>
+
+      <!-- Transição -->
+      <div class="card">
+        <div class="card-icon"><i data-lucide="refresh-cw" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Transição de Embaixador</div>
+        <div class="card-body">
+          Fluxo executado pelo responsável central:
+          <div class="flow-steps" style="margin-top:16px">
+            <div class="flow-step"><div class="flow-num">1</div><div class="flow-text">Altera senha do Gmail</div></div>
+            <div class="flow-step"><div class="flow-num">2</div><div class="flow-text">Altera senha do Instagram</div></div>
+            <div class="flow-step"><div class="flow-num">3</div><div class="flow-text">Novo embaixador recebe credenciais</div></div>
+            <div class="flow-step"><div class="flow-num">4</div><div class="flow-text">Conselheiro(s) recebem nova senha</div></div>
+            <div class="flow-step"><div class="flow-num">5</div><div class="flow-text">Embaixador anterior perde acesso</div></div>
+          </div>
+          <p style="margin-top:12px;font-size:0.82rem">A troca deve acontecer no mesmo dia do encerramento do mandato.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Regras de Segurança -->
+    <div class="cards-grid cards-grid-1" style="margin-top:20px">
+      <div class="card">
+        <div class="card-icon"><i data-lucide="lock" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Regras Inegociáveis de Segurança</div>
+        <div class="card-body">
+          <ol style="padding-left:18px;line-height:2.2">
+            <li>Nenhum perfil pode ser criado com <strong>email pessoal</strong></li>
+            <li>Email de recuperação do Gmail sempre aponta para o <strong>Movimento</strong></li>
+            <li>Pelo menos <strong>2 pessoas</strong> devem ter acesso ao email a qualquer momento</li>
+            <li>Pelo menos <strong>1 conselheiro</strong> com acesso ao Instagram</li>
+            <li>Credenciais <strong>nunca</strong> são postadas em grupos abertos</li>
+            <li>Se credenciais não forem enviadas em <strong>48h</strong>, perfil não pode ser divulgado</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DESTAQUES -->
+<section class="section section-light">
+  <div class="section-inner">
+    <div class="section-label">Destaques</div>
+    <h2 class="section-title">Seus destaques contam a história do Hub</h2>
+    <p class="section-subtitle">4 categorias obrigatórias + capas padronizadas para download.</p>
+
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-tag">Obrigatório</div>
+        <div class="card-icon"><i data-lucide="cpu" style="width:22px;height:22px"></i></div>
+        <div class="card-title">IA na Prática</div>
+        <div class="card-body">Ferramentas de IA, demos rápidas, dicas de uso, resultados reais de membros.<br><br><em>"Isso aqui funciona, olha"</em></div>
+      </div>
+      <div class="card">
+        <div class="card-tag">Obrigatório</div>
+        <div class="card-icon"><i data-lucide="map-pin" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Encontros</div>
+        <div class="card-body">Registros de encontros — fotos, vídeos curtos, bastidores, depoimentos.<br><br><em>"O Movimento acontece aqui"</em></div>
+      </div>
+      <div class="card">
+        <div class="card-tag">Obrigatório</div>
+        <div class="card-icon"><i data-lucide="infinity" style="width:22px;height:22px"></i></div>
+        <div class="card-title">O Movimento</div>
+        <div class="card-body">O que é o Hub Lendário, como participar, manifesto, filosofia, reposts oficiais.<br><br><em>"Conectando o artificial ao natural"</em></div>
+      </div>
+      <div class="card">
+        <div class="card-tag">Obrigatório</div>
+        <div class="card-icon"><i data-lucide="users" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Comunidade</div>
+        <div class="card-body">Apresentação de membros, histórias de transformação, depoimentos, celebrações.<br><br><em>"Pessoas chegam pela IA, mas ficam pela identidade"</em></div>
+      </div>
+    </div>
+
+    <p style="margin-top:24px;font-size:0.85rem;color:var(--text-muted-light)"><strong>Opcionais:</strong> Ferramentas, Workshops, Parcerias. Use as capas padronizadas — fundo preto, ícone branco, mesma tipografia.</p>
+  </div>
+</section>
+
+<!-- O QUE PUBLICAR -->
+<section class="section section-darker">
+  <div class="section-inner">
+    <div class="section-label">Conteúdo</div>
+    <h2 class="section-title">Seu Hub tem voz — use com estratégia</h2>
+    <p class="section-subtitle">6 tipos de conteúdo que todo Hub pode publicar. Você não precisa inventar do zero — use os templates.</p>
+
+    <div class="cards-grid cards-grid-2">
+      <div class="card">
+        <div class="card-tag">Pós-encontro</div>
+        <div class="card-icon"><i data-lucide="camera" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Registro de Encontro</div>
+        <div class="card-body">
+          Carrossel (3-5 fotos) ou Reel curto (15-30s). Inclua: foto do grupo, formato, tema, data, local. Marque participantes.
+          <div class="bio-block" style="margin-top:12px;font-size:0.82rem">♾️ Encontro Inside — {Tema}
+📍 {Local}, {Cidade}
+📅 {Data}
+
+{1-2 frases sobre o que rolou}
+
+Quer participar do próximo? Link na bio 👆
+
+#HubLendario #HubLendario{Cidade}</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-tag">3-5 dias antes</div>
+        <div class="card-icon"><i data-lucide="calendar" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Convite para Encontro</div>
+        <div class="card-body">
+          Card único (template Canva) ou carrossel. Inclua: logo, formato, tema, data, horário, local.
+          <div class="bio-block" style="margin-top:12px;font-size:0.82rem">🗓️ Próximo encontro confirmado!
+
+♾️ {Formato} — {Tema}
+📍 {Local}
+📅 {Data} às {Horário}
+
+Traga um convidado que usa IA 🤝
+
+#HubLendario #HubLendario{Cidade}</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-tag">Sugestão semanal</div>
+        <div class="card-icon"><i data-lucide="cpu" style="width:22px;height:22px"></i></div>
+        <div class="card-title">IA na Prática</div>
+        <div class="card-body">
+          Reel (demonstração) ou carrossel (passo a passo).
+          <ul style="margin-top:8px;padding-left:16px;line-height:2">
+            <li>Ferramenta da semana</li>
+            <li>Prompt que funcionou</li>
+            <li>Antes e depois com IA</li>
+            <li>IA no trabalho de um membro</li>
+          </ul>
+          <p style="margin-top:8px;font-size:0.82rem">Tom prático e acessível. Nem todo membro é programador.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-tag">Sugestão semanal</div>
+        <div class="card-icon"><i data-lucide="leaf" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Artificial ao Natural</div>
+        <div class="card-body">
+          Card com frase + fundo escuro (template Canva). Reforça a filosofia do Movimento.
+          <ul style="margin-top:8px;padding-left:16px;line-height:2;font-style:italic">
+            <li>"IA é ferramenta, não destino."</li>
+            <li>"O artificial existe para amplificar o natural."</li>
+            <li>"Conexão real não se automatiza."</li>
+            <li>"Use IA para criar. Encontre pessoas para viver."</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-tag">Sugestão mensal</div>
+        <div class="card-icon"><i data-lucide="heart" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Membros &amp; Histórias</div>
+        <div class="card-body">
+          Carrossel com história do membro:
+          <ol style="margin-top:8px;padding-left:16px;line-height:2">
+            <li>Foto + nome + profissão</li>
+            <li>"Como eu uso IA no dia a dia"</li>
+            <li>"O que o Hub mudou pra mim"</li>
+            <li>CTA: "Link na bio"</li>
+          </ol>
+          <p style="margin-top:8px;font-size:0.82rem">Tom humano, real, sem filtro corporativo.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-tag">Quando relevante</div>
+        <div class="card-icon"><i data-lucide="repeat" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Repost Oficial</div>
+        <div class="card-body">
+          Compartilhamento direto no feed ou stories.
+          <ul style="margin-top:8px;padding-left:16px;line-height:2">
+            <li>Comunicados do Movimento</li>
+            <li>Lançamentos da Academia Lendária</li>
+            <li>Conteúdo que mencione seu Hub</li>
+            <li>Provocações de Terça</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOM DE VOZ -->
+<section class="section section-light">
+  <div class="section-inner">
+    <div class="section-label">Comunicação</div>
+    <h2 class="section-title">Como o Hub Lendário fala</h2>
+    <p class="section-subtitle">Seu Hub tem personalidade local, mas o tom do Movimento é um só.</p>
+
+    <table class="tone-table">
+      <tr>
+        <td class="tone-yes"><strong>✓ Acessíveis</strong> — qualquer pessoa entende</td>
+        <td class="tone-no"><strong>✗ Rebuscados</strong> — sem jargão desnecessário</td>
+      </tr>
+      <tr>
+        <td class="tone-yes"><strong>✓ Tech-humanos</strong> — falamos de IA com calor</td>
+        <td class="tone-no"><strong>✗ Frios</strong> — sem linguagem de manual técnico</td>
+      </tr>
+      <tr>
+        <td class="tone-yes"><strong>✓ Diretos</strong> — vamos ao ponto</td>
+        <td class="tone-no"><strong>✗ Enrolados</strong> — sem rodeios</td>
+      </tr>
+      <tr>
+        <td class="tone-yes"><strong>✓ Inspiradores</strong> — mostramos possibilidades</td>
+        <td class="tone-no"><strong>✗ Hype</strong> — sem promessas vazias de IA</td>
+      </tr>
+      <tr>
+        <td class="tone-yes"><strong>✓ Comunitários</strong> — "a gente", "nosso Hub"</td>
+        <td class="tone-no"><strong>✗ Corporativos</strong> — sem "empresa", "stakeholders"</td>
+      </tr>
+      <tr>
+        <td class="tone-yes"><strong>✓ Reais</strong> — admitimos quando não funciona</td>
+        <td class="tone-no"><strong>✗ Perfeitos</strong> — sem feed artificial</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- O QUE NÃO FAZER -->
+<section class="section section-dark">
+  <div class="section-inner">
+    <div class="section-label">Atenção</div>
+    <h2 class="section-title">Erros que quebram a identidade do Movimento</h2>
+    <p class="section-subtitle">Se você identificar qualquer um desses no seu perfil, corrija antes de publicar.</p>
+
+    <ol class="dont-list">
+      <li class="dont-item"><div class="dont-number">1</div><div><div class="dont-title">NÃO mude o logo</div><div class="dont-desc">A foto de perfil é padronizada. Não adicione filtros, bordas, cores diferentes ou seu rosto.</div></div></li>
+      <li class="dont-item"><div class="dont-number">2</div><div><div class="dont-title">NÃO altere a bio</div><div class="dont-desc">A bio tem formato fixo. Não adicione frases pessoais, emojis diferentes ou links próprios.</div></div></li>
+      <li class="dont-item"><div class="dont-number">3</div><div><div class="dont-title">NÃO publique conteúdo pessoal</div><div class="dont-desc">O perfil é do Movimento, não seu. Nada de selfies, publis próprias ou conteúdo sem relação com IA.</div></div></li>
+      <li class="dont-item"><div class="dont-number">4</div><div><div class="dont-title">NÃO use o perfil para vender</div><div class="dont-desc">Sem links de afiliado pessoal ou promoção de produtos. Único link comercial é o do Movimento.</div></div></li>
+      <li class="dont-item"><div class="dont-number">5</div><div><div class="dont-title">NÃO crie templates próprios</div><div class="dont-desc">Use os templates padronizados do Canva. Criar visuais diferentes fragmenta a identidade.</div></div></li>
+      <li class="dont-item"><div class="dont-number">6</div><div><div class="dont-title">NÃO abandone o perfil</div><div class="dont-desc">Perfil parado é pior que não ter perfil. Se não consegue manter, converse com seu supervisor.</div></div></li>
+      <li class="dont-item"><div class="dont-number">7</div><div><div class="dont-title">NÃO ignore os encontros</div><div class="dont-desc">Se o feed só tem cards genéricos e nunca tem foto de encontro, algo está errado.</div></div></li>
+      <li class="dont-item"><div class="dont-number">8</div><div><div class="dont-title">NÃO fale em nome da Academia</div><div class="dont-desc">Você representa seu Hub, não a Academia Lendária. Comunicados oficiais vêm do perfil oficial.</div></div></li>
+      <li class="dont-item"><div class="dont-number">9</div><div><div class="dont-title">NÃO crie com email pessoal</div><div class="dont-desc">Use o email padronizado hublendario{cidade}@gmail.com. Se criou com email pessoal, transfira.</div></div></li>
+      <li class="dont-item"><div class="dont-number">10</div><div><div class="dont-title">NÃO guarde credenciais só para você</div><div class="dont-desc">Senhas devem ser compartilhadas com responsável central e conselheiro. Sem acesso = Hub morre.</div></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- CHECKLIST -->
+<section class="section section-light">
+  <div class="section-inner">
+    <div class="section-label">Ativação</div>
+    <h2 class="section-title">Antes de publicar o primeiro post</h2>
+    <p class="section-subtitle">Valide cada item antes de ir ao ar. Todos são obrigatórios.</p>
+
+    <div class="checklist-group-title">🔐 Acesso e Segurança</div>
+    <ul class="checklist">
+      <li><div class="check-box"></div>Email <code>hublendario{cidade}@gmail.com</code> criado</li>
+      <li><div class="check-box"></div>Email de recuperação configurado para o Movimento</li>
+      <li><div class="check-box"></div>2FA desativada ou com acesso compartilhado</li>
+      <li><div class="check-box"></div>Instagram criado com email do Hub (não pessoal)</li>
+      <li><div class="check-box"></div>Credenciais enviadas ao responsável central</li>
+      <li><div class="check-box"></div>Pelo menos 1 conselheiro com acesso ao Instagram</li>
+      <li><div class="check-box"></div>Embaixador ciente de que o perfil pertence ao Movimento</li>
+    </ul>
+
+    <div class="checklist-group-title">♾️ Perfil e Identidade</div>
+    <ul class="checklist">
+      <li><div class="check-box"></div>Username segue o padrão <code>@hublendario{cidade}</code></li>
+      <li><div class="check-box"></div>Nome de exibição: <code>Hub Lendário {Cidade} ♾️</code></li>
+      <li><div class="check-box"></div>Foto de perfil: logo + cidade no padrão</li>
+      <li><div class="check-box"></div>Bio: formato fixo, substituiu apenas a cidade</li>
+      <li><div class="check-box"></div>Link na bio: aponta para o site do Hub Lendário</li>
+      <li><div class="check-box"></div>Conta configurada como Profissional</li>
+      <li><div class="check-box"></div>Categoria: Comunidade ou Educação</li>
+    </ul>
+
+    <div class="checklist-group-title">📰 Conteúdo e Lançamento</div>
+    <ul class="checklist">
+      <li><div class="check-box"></div>4 destaques criados com capas padronizadas</li>
+      <li><div class="check-box"></div>Primeiro encontro já aconteceu</li>
+      <li><div class="check-box"></div>Pelo menos 3 posts prontos antes de divulgar</li>
+      <li><div class="check-box"></div>Comunicou no grupo de embaixadores</li>
+      <li><div class="check-box"></div>Supervisor validou o perfil</li>
+    </ul>
+
+    <div class="highlight" style="margin-top:32px">Nenhum perfil deve ser divulgado publicamente antes de completar TODOS os itens.</div>
+  </div>
+</section>
+
+<!-- SUGESTÃO DE CALENDÁRIO -->
+<section class="section section-darker">
+  <div class="section-inner">
+    <div class="section-label">Calendário</div>
+    <h2 class="section-title">Sugestão de calendário semanal</h2>
+    <p class="section-subtitle">Uma referência para organizar seu conteúdo. Adapte conforme a realidade do seu Hub — o importante é manter consistência.</p>
+
+    <div class="calendar">
+      <div class="cal-row"><div class="cal-day">Segunda</div><div class="cal-content">IA na Prática (ferramenta/dica)</div><span class="cal-badge cal-suggested">Sugestão</span></div>
+      <div class="cal-row"><div class="cal-day">Terça</div><div class="cal-content">Repost Provocação de Terça</div><span class="cal-badge cal-suggested">Sugestão</span></div>
+      <div class="cal-row"><div class="cal-day">Quarta</div><div class="cal-content">Livre — use conforme necessidade</div><span class="cal-badge cal-free">Livre</span></div>
+      <div class="cal-row"><div class="cal-day">Quinta</div><div class="cal-content">Convite para encontro</div><span class="cal-badge cal-suggested">Sugestão</span></div>
+      <div class="cal-row"><div class="cal-day">Sexta</div><div class="cal-content">Artificial ao Natural (frase/reflexão)</div><span class="cal-badge cal-suggested">Sugestão</span></div>
+      <div class="cal-row"><div class="cal-day">Sábado</div><div class="cal-content">Registro de encontro</div><span class="cal-badge cal-suggested">Sugestão</span></div>
+      <div class="cal-row"><div class="cal-day">Domingo</div><div class="cal-content">Livre — use conforme necessidade</div><span class="cal-badge cal-free">Livre</span></div>
+    </div>
+
+    <div class="highlight" style="margin-top:32px">Este calendário é uma sugestão, não uma regra. O mais importante é que o perfil esteja ativo e refletindo o que acontece no seu Hub.</div>
+  </div>
+</section>
+
+<!-- ASSETS -->
+<section class="section section-light">
+  <div class="section-inner">
+    <div class="section-label">Recursos</div>
+    <h2 class="section-title">Tudo que você precisa, pronto para usar</h2>
+    <p class="section-subtitle">Templates editáveis, capas e guias. Baixe, edite apenas o permitido e publique.</p>
+
+    <h3 style="margin-top:8px;margin-bottom:16px;font-size:1rem;color:var(--text-muted-light)">Capas de Destaque (1080x1920)</h3>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon"><i data-lucide="cpu" style="width:22px;height:22px"></i></div>
+        <div class="card-title">IA na Prática</div>
+        <div class="card-body">Capa para destaque de stories<br><br>
+          <button onclick="downloadPNG('capa-ia-na-pratica','capa-ia-na-pratica.png')" class="btn btn-primary" style="padding:8px 20px;font-size:0.8rem;width:100%"><i data-lucide="download" style="width:14px;height:14px"></i> Baixar PNG</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i data-lucide="map-pin" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Encontros</div>
+        <div class="card-body">Capa para destaque de stories<br><br>
+          <button onclick="downloadPNG('capa-encontros','capa-encontros.png')" class="btn btn-primary" style="padding:8px 20px;font-size:0.8rem;width:100%"><i data-lucide="download" style="width:14px;height:14px"></i> Baixar PNG</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i data-lucide="infinity" style="width:22px;height:22px"></i></div>
+        <div class="card-title">O Movimento</div>
+        <div class="card-body">Capa para destaque de stories<br><br>
+          <button onclick="downloadPNG('capa-o-movimento','capa-o-movimento.png')" class="btn btn-primary" style="padding:8px 20px;font-size:0.8rem;width:100%"><i data-lucide="download" style="width:14px;height:14px"></i> Baixar PNG</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i data-lucide="users" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Comunidade</div>
+        <div class="card-body">Capa para destaque de stories<br><br>
+          <button onclick="downloadPNG('capa-comunidade','capa-comunidade.png')" class="btn btn-primary" style="padding:8px 20px;font-size:0.8rem;width:100%"><i data-lucide="download" style="width:14px;height:14px"></i> Baixar PNG</button>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:40px;margin-bottom:16px;font-size:1rem;color:var(--text-muted-light)">Templates de Posts (1080x1080)</h3>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon"><i data-lucide="calendar" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Convite de Encontro</div>
+        <div class="card-body">Editar: data, horário, local, tema<br><br>
+          <div style="display:flex;gap:8px">
+            <button onclick="downloadPNG('template-convite','template-convite-encontro.png')" class="btn btn-primary" style="padding:8px 16px;font-size:0.8rem;flex:1"><i data-lucide="download" style="width:14px;height:14px"></i> PNG</button>
+            <button onclick="downloadSVG('template-convite','template-convite-encontro.svg')" class="btn btn-secondary" style="padding:8px 16px;font-size:0.8rem;flex:1"><i data-lucide="download" style="width:14px;height:14px"></i> SVG</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i data-lucide="camera" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Registro de Encontro</div>
+        <div class="card-body">Editar: fotos, data, tema<br><br>
+          <div style="display:flex;gap:8px">
+            <button onclick="downloadPNG('template-registro','template-registro-encontro.png')" class="btn btn-primary" style="padding:8px 16px;font-size:0.8rem;flex:1"><i data-lucide="download" style="width:14px;height:14px"></i> PNG</button>
+            <button onclick="downloadSVG('template-registro','template-registro-encontro.svg')" class="btn btn-secondary" style="padding:8px 16px;font-size:0.8rem;flex:1"><i data-lucide="download" style="width:14px;height:14px"></i> SVG</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i data-lucide="quote" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Frase / Quote</div>
+        <div class="card-body">Editar: apenas o texto da frase<br><br>
+          <div style="display:flex;gap:8px">
+            <button onclick="downloadPNG('template-frase','template-frase-quote.png')" class="btn btn-primary" style="padding:8px 16px;font-size:0.8rem;flex:1"><i data-lucide="download" style="width:14px;height:14px"></i> PNG</button>
+            <button onclick="downloadSVG('template-frase','template-frase-quote.svg')" class="btn btn-secondary" style="padding:8px 16px;font-size:0.8rem;flex:1"><i data-lucide="download" style="width:14px;height:14px"></i> SVG</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i data-lucide="user" style="width:22px;height:22px"></i></div>
+        <div class="card-title">Apresentação de Membro</div>
+        <div class="card-body">Editar: foto, nome, profissão, texto<br><br>
+          <div style="display:flex;gap:8px">
+            <button onclick="downloadPNG('template-membro','template-apresentacao-membro.png')" class="btn btn-primary" style="padding:8px 16px;font-size:0.8rem;flex:1"><i data-lucide="download" style="width:14px;height:14px"></i> PNG</button>
+            <button onclick="downloadSVG('template-membro','template-apresentacao-membro.svg')" class="btn btn-secondary" style="padding:8px 16px;font-size:0.8rem;flex:1"><i data-lucide="download" style="width:14px;height:14px"></i> SVG</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i data-lucide="cpu" style="width:22px;height:22px"></i></div>
+        <div class="card-title">IA na Prática</div>
+        <div class="card-body">Editar: ferramenta, descrição, prints<br><br>
+          <div style="display:flex;gap:8px">
+            <button onclick="downloadPNG('template-ia-pratica','template-ia-na-pratica.png')" class="btn btn-primary" style="padding:8px 16px;font-size:0.8rem;flex:1"><i data-lucide="download" style="width:14px;height:14px"></i> PNG</button>
+            <button onclick="downloadSVG('template-ia-pratica','template-ia-na-pratica.svg')" class="btn btn-secondary" style="padding:8px 16px;font-size:0.8rem;flex:1"><i data-lucide="download" style="width:14px;height:14px"></i> SVG</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:32px;text-align:center">
+      <button onclick="downloadAll()" class="btn btn-primary" style="padding:14px 40px"><i data-lucide="download" style="width:18px;height:18px"></i> Baixar Tudo (9 arquivos)</button>
+    </div>
+
+    <p style="margin-top:24px;font-size:0.85rem;color:var(--text-muted-light);text-align:center">Templates disponíveis em PNG (pronto para usar) e SVG (editável). Para editar, abra o SVG em qualquer editor de imagem ou importe no Canva.</p>
+  </div>
+</section>
+
+<!-- PERFIS EXISTENTES -->
+<section class="section section-darker">
+  <div class="section-inner">
+    <div class="section-label">Alinhamento</div>
+    <h2 class="section-title">Perfis existentes — hora de alinhar</h2>
+    <p class="section-subtitle">Alguns Hubs já criaram perfis antes deste guia existir. Agora é hora de alinhar.</p>
+
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon"><i data-lucide="instagram" style="width:22px;height:22px"></i></div>
+        <div class="card-title">@hublendariofloripa</div>
+        <div class="card-body">Verificar bio, destaques e frequência</div>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i data-lucide="instagram" style="width:22px;height:22px"></i></div>
+        <div class="card-title">@hublendariobelem</div>
+        <div class="card-body">Verificar bio, destaques e frequência</div>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i data-lucide="instagram" style="width:22px;height:22px"></i></div>
+        <div class="card-title">@hublendariorj</div>
+        <div class="card-body">Verificar bio, destaques e frequência</div>
+      </div>
+    </div>
+
+    <p style="margin-top:24px;font-size:0.85rem;color:var(--text-muted)"><strong>Prazo sugerido:</strong> 15 dias após publicação deste guia para todos os perfis estarem alinhados.</p>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section section-dark">
+  <div class="section-inner">
+    <h2 class="section-title">Seu Hub, nossa identidade</h2>
+    <p class="section-subtitle">O Instagram do seu Hub é a vitrine do Movimento na sua cidade. Cada post mostra que a IA não é só tecnologia — é gente real, em encontros reais, conectando o artificial ao natural.</p>
+    <div class="highlight" style="text-align:center;border-left:none;border:1px solid var(--accent);border-radius:var(--radius)">Um movimento de IA que acontece no mundo real.</div>
+    <div class="btn-group" style="margin-top:40px">
+      <button onclick="downloadAll()" class="btn btn-primary">Baixar Kit de Assets</button>
+      <a href="https://hub-lendario-beryl.vercel.app/embaixadores" class="btn btn-secondary">Voltar para Embaixadores</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>♾️ Conexão local forjando lendários globais.</p>
+</footer>
+
+<script>
+lucide.createIcons();
+
+// SVG data for all assets (inline)
+const svgAssets = {
+  'capa-ia-na-pratica': `<svg width="1080" height="1920" xmlns="http://www.w3.org/2000/svg"><rect width="1080" height="1920" fill="#0a0a0a"/><circle cx="540" cy="860" r="120" fill="none" stroke="#c9a84c" stroke-width="3" opacity="0.2"/><circle cx="540" cy="860" r="80" fill="none" stroke="#c9a84c" stroke-width="2" opacity="0.1"/><rect x="500" y="820" width="80" height="80" rx="8" fill="none" stroke="#f5f5f5" stroke-width="4"/><rect x="520" y="840" width="40" height="40" rx="4" fill="none" stroke="#f5f5f5" stroke-width="3"/><line x1="520" y1="860" x2="500" y2="860" stroke="#f5f5f5" stroke-width="4"/><line x1="560" y1="860" x2="580" y2="860" stroke="#f5f5f5" stroke-width="4"/><line x1="540" y1="840" x2="540" y2="820" stroke="#f5f5f5" stroke-width="4"/><line x1="540" y1="880" x2="540" y2="900" stroke="#f5f5f5" stroke-width="4"/><text x="540" y="1020" text-anchor="middle" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="48">IA na Prática</text><rect x="490" y="1050" width="100" height="3" rx="2" fill="#c9a84c"/></svg>`,
+
+  'capa-encontros': `<svg width="1080" height="1920" xmlns="http://www.w3.org/2000/svg"><rect width="1080" height="1920" fill="#0a0a0a"/><circle cx="540" cy="860" r="120" fill="none" stroke="#c9a84c" stroke-width="3" opacity="0.2"/><circle cx="540" cy="860" r="80" fill="none" stroke="#c9a84c" stroke-width="2" opacity="0.1"/><path d="M540 810 C515 810 495 830 495 855 C495 890 540 920 540 920 C540 920 585 890 585 855 C585 830 565 810 540 810Z" fill="none" stroke="#f5f5f5" stroke-width="4"/><circle cx="540" cy="852" r="12" fill="none" stroke="#f5f5f5" stroke-width="4"/><text x="540" y="1020" text-anchor="middle" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="48">Encontros</text><rect x="490" y="1050" width="100" height="3" rx="2" fill="#c9a84c"/></svg>`,
+
+  'capa-o-movimento': `<svg width="1080" height="1920" xmlns="http://www.w3.org/2000/svg"><rect width="1080" height="1920" fill="#0a0a0a"/><circle cx="540" cy="860" r="120" fill="none" stroke="#c9a84c" stroke-width="3" opacity="0.2"/><circle cx="540" cy="860" r="80" fill="none" stroke="#c9a84c" stroke-width="2" opacity="0.1"/><path d="M480 860 C480 835 505 815 530 835 C545 847 555 847 570 835 C595 815 620 835 620 860 C620 885 595 905 570 885 C555 873 545 873 530 885 C505 905 480 885 480 860Z" fill="none" stroke="#f5f5f5" stroke-width="4.5"/><text x="540" y="1020" text-anchor="middle" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="48">O Movimento</text><rect x="490" y="1050" width="100" height="3" rx="2" fill="#c9a84c"/></svg>`,
+
+  'capa-comunidade': `<svg width="1080" height="1920" xmlns="http://www.w3.org/2000/svg"><rect width="1080" height="1920" fill="#0a0a0a"/><circle cx="540" cy="860" r="120" fill="none" stroke="#c9a84c" stroke-width="3" opacity="0.2"/><circle cx="540" cy="860" r="80" fill="none" stroke="#c9a84c" stroke-width="2" opacity="0.1"/><circle cx="540" cy="835" r="18" fill="none" stroke="#f5f5f5" stroke-width="4"/><path d="M510 890 C510 870 525 858 540 858 C555 858 570 870 570 890" fill="none" stroke="#f5f5f5" stroke-width="4" stroke-linecap="round"/><circle cx="490" cy="845" r="14" fill="none" stroke="#f5f5f5" stroke-width="3.5" opacity="0.7"/><path d="M465 890 C465 874 477 865 490 865 C500 865 508 870 513 878" fill="none" stroke="#f5f5f5" stroke-width="3.5" stroke-linecap="round" opacity="0.7"/><circle cx="590" cy="845" r="14" fill="none" stroke="#f5f5f5" stroke-width="3.5" opacity="0.7"/><path d="M567 878 C572 870 580 865 590 865 C603 865 615 874 615 890" fill="none" stroke="#f5f5f5" stroke-width="3.5" stroke-linecap="round" opacity="0.7"/><text x="540" y="1020" text-anchor="middle" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="48">Comunidade</text><rect x="490" y="1050" width="100" height="3" rx="2" fill="#c9a84c"/></svg>`,
+
+  'template-convite': `<svg width="1080" height="1080" xmlns="http://www.w3.org/2000/svg"><rect width="1080" height="1080" fill="#0a0a0a"/><rect x="0" y="0" width="1080" height="6" fill="#c9a84c"/><text x="80" y="120" fill="#c9a84c" font-family="Inter,system-ui,sans-serif" font-size="28" font-weight="600">♾️ HUB LENDÁRIO</text><rect x="80" y="200" width="280" height="44" rx="22" fill="rgba(201,168,76,0.15)"/><text x="220" y="228" text-anchor="middle" fill="#c9a84c" font-family="Inter,system-ui,sans-serif" font-size="18" font-weight="700" letter-spacing="2">ENCONTRO INSIDE</text><text x="80" y="340" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="56">Tema do</text><text x="80" y="410" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="56">Encontro Aqui</text><rect x="80" y="450" width="60" height="3" rx="2" fill="#c9a84c"/><text x="80" y="540" fill="#c9a84c" font-family="Inter,system-ui,sans-serif" font-size="18" font-weight="600">📅 DATA</text><text x="80" y="575" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-size="28" font-weight="500">Sábado, 12 de Abril</text><text x="80" y="650" fill="#c9a84c" font-family="Inter,system-ui,sans-serif" font-size="18" font-weight="600">🕐 HORÁRIO</text><text x="80" y="685" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-size="28" font-weight="500">14h às 16h</text><text x="80" y="760" fill="#c9a84c" font-family="Inter,system-ui,sans-serif" font-size="18" font-weight="600">📍 LOCAL</text><text x="80" y="795" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-size="28" font-weight="500">Nome do Local, Cidade</text><rect x="80" y="880" width="360" height="60" rx="8" fill="#c9a84c"/><text x="260" y="918" text-anchor="middle" fill="#0a0a0a" font-family="Inter,system-ui,sans-serif" font-size="22" font-weight="700">Junte-se ao encontro →</text><text x="80" y="1020" fill="#888888" font-family="Inter,system-ui,sans-serif" font-size="16">Comunidade de IA · Conectando o artificial ao natural</text><rect x="0" y="1074" width="1080" height="6" fill="#c9a84c"/></svg>`,
+
+  'template-frase': `<svg width="1080" height="1080" xmlns="http://www.w3.org/2000/svg"><rect width="1080" height="1080" fill="#0a0a0a"/><circle cx="540" cy="540" r="350" fill="none" stroke="#1a1a1a" stroke-width="1"/><circle cx="540" cy="540" r="250" fill="none" stroke="#1a1a1a" stroke-width="1"/><text x="100" y="320" fill="#c9a84c" font-family="Georgia,serif" font-size="180" opacity="0.2">"</text><text x="540" y="480" text-anchor="middle" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="48">IA é ferramenta,</text><text x="540" y="550" text-anchor="middle" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="48">não destino.</text><rect x="490" y="600" width="100" height="3" rx="2" fill="#c9a84c"/><text x="540" y="700" text-anchor="middle" fill="#c9a84c" font-family="Inter,system-ui,sans-serif" font-size="20" font-weight="600" letter-spacing="3">♾️ HUB LENDÁRIO</text><text x="540" y="740" text-anchor="middle" fill="#888888" font-family="Inter,system-ui,sans-serif" font-size="18">Conectando o artificial ao natural</text></svg>`,
+
+  'template-membro': `<svg width="1080" height="1080" xmlns="http://www.w3.org/2000/svg"><rect width="1080" height="1080" fill="#0a0a0a"/><rect x="0" y="0" width="1080" height="6" fill="#c9a84c"/><text x="80" y="100" fill="#c9a84c" font-family="Inter,system-ui,sans-serif" font-size="22" font-weight="600">♾️ HUB LENDÁRIO {CIDADE}</text><circle cx="540" cy="380" r="140" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="2"/><text x="540" y="390" text-anchor="middle" fill="#888888" font-family="Inter,system-ui,sans-serif" font-size="18">Foto do</text><text x="540" y="415" text-anchor="middle" fill="#888888" font-family="Inter,system-ui,sans-serif" font-size="18">Membro</text><text x="540" y="600" text-anchor="middle" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="44">Nome do Membro</text><text x="540" y="650" text-anchor="middle" fill="#c9a84c" font-family="Inter,system-ui,sans-serif" font-weight="500" font-size="24">Profissão / Área de atuação</text><rect x="490" y="690" width="100" height="3" rx="2" fill="#c9a84c"/><text x="540" y="770" text-anchor="middle" fill="#888888" font-family="Inter,system-ui,sans-serif" font-size="22" font-style="italic">"Como eu uso IA no meu dia a dia"</text><rect x="410" y="860" width="260" height="44" rx="22" fill="rgba(201,168,76,0.15)"/><text x="540" y="888" text-anchor="middle" fill="#c9a84c" font-family="Inter,system-ui,sans-serif" font-size="16" font-weight="700" letter-spacing="2">MEMBRO LENDÁRIO</text><text x="540" y="1000" text-anchor="middle" fill="#888888" font-family="Inter,system-ui,sans-serif" font-size="16">Comunidade de IA · Conectando o artificial ao natural</text><rect x="0" y="1074" width="1080" height="6" fill="#c9a84c"/></svg>`,
+
+  'template-registro': `<svg width="1080" height="1080" xmlns="http://www.w3.org/2000/svg"><rect width="1080" height="1080" fill="#0a0a0a"/><rect x="0" y="0" width="1080" height="6" fill="#c9a84c"/><text x="80" y="100" fill="#c9a84c" font-family="Inter,system-ui,sans-serif" font-size="22" font-weight="600">♾️ HUB LENDÁRIO {CIDADE}</text><rect x="80" y="150" width="920" height="480" rx="12" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/><text x="540" y="400" text-anchor="middle" fill="#888888" font-family="Inter,system-ui,sans-serif" font-size="22">📸 Foto do encontro aqui</text><rect x="80" y="670" width="240" height="40" rx="20" fill="rgba(201,168,76,0.15)"/><text x="200" y="696" text-anchor="middle" fill="#c9a84c" font-family="Inter,system-ui,sans-serif" font-size="16" font-weight="700" letter-spacing="2">ENCONTRO INSIDE</text><text x="80" y="770" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="40">Tema do Encontro</text><text x="80" y="830" fill="#888888" font-family="Inter,system-ui,sans-serif" font-size="22">📅 Sábado, 12 de Abril · 📍 Local, Cidade</text><text x="80" y="900" fill="#888888" font-family="Inter,system-ui,sans-serif" font-size="20">Breve descrição do que aconteceu no encontro.</text><text x="80" y="1020" fill="#888888" font-family="Inter,system-ui,sans-serif" font-size="16">Comunidade de IA · Conectando o artificial ao natural</text><rect x="0" y="1074" width="1080" height="6" fill="#c9a84c"/></svg>`,
+
+  'template-ia-pratica': `<svg width="1080" height="1080" xmlns="http://www.w3.org/2000/svg"><rect width="1080" height="1080" fill="#0a0a0a"/><rect x="0" y="0" width="1080" height="6" fill="#c9a84c"/><text x="80" y="100" fill="#c9a84c" font-family="Inter,system-ui,sans-serif" font-size="22" font-weight="600">♾️ HUB LENDÁRIO {CIDADE}</text><rect x="80" y="160" width="260" height="40" rx="20" fill="rgba(201,168,76,0.15)"/><text x="210" y="186" text-anchor="middle" fill="#c9a84c" font-family="Inter,system-ui,sans-serif" font-size="16" font-weight="700" letter-spacing="2">🤖 IA NA PRÁTICA</text><text x="80" y="310" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="52">Nome da</text><text x="80" y="380" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="52">Ferramenta</text><rect x="80" y="420" width="60" height="3" rx="2" fill="#c9a84c"/><text x="80" y="490" fill="#888888" font-family="Inter,system-ui,sans-serif" font-size="24">O que faz:</text><text x="80" y="530" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-size="22">Breve descrição da ferramenta e como</text><text x="80" y="560" fill="#f5f5f5" font-family="Inter,system-ui,sans-serif" font-size="22">ela pode ser usada no dia a dia.</text><rect x="80" y="610" width="920" height="300" rx="12" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/><text x="540" y="770" text-anchor="middle" fill="#888888" font-family="Inter,system-ui,sans-serif" font-size="20">📱 Print / Screenshot da ferramenta</text><text x="80" y="980" fill="#888888" font-family="Inter,system-ui,sans-serif" font-size="18">Testado por membros do Hub · Resultado real</text><text x="80" y="1020" fill="#888888" font-family="Inter,system-ui,sans-serif" font-size="16">Comunidade de IA · Conectando o artificial ao natural</text><rect x="0" y="1074" width="1080" height="6" fill="#c9a84c"/></svg>`
+};
+
+function downloadPNG(assetKey, filename) {
+  const svgData = svgAssets[assetKey];
+  const parser = new DOMParser();
+  const svgDoc = parser.parseFromString(svgData, 'image/svg+xml');
+  const svgEl = svgDoc.documentElement;
+  const w = parseInt(svgEl.getAttribute('width'));
+  const h = parseInt(svgEl.getAttribute('height'));
+
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+
+  const img = new Image();
+  const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+
+  img.onload = function () {
+    ctx.drawImage(img, 0, 0, w, h);
+    URL.revokeObjectURL(url);
+    const a = document.createElement('a');
+    a.download = filename;
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  };
+  img.src = url;
+}
+
+function downloadSVG(assetKey, filename) {
+  const svgData = svgAssets[assetKey];
+  const blob = new Blob([svgData], { type: 'image/svg+xml' });
+  const a = document.createElement('a');
+  a.download = filename;
+  a.href = URL.createObjectURL(blob);
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function svgToPngBlob(svgData) {
+  return new Promise((resolve) => {
+    const parser = new DOMParser();
+    const svgDoc = parser.parseFromString(svgData, 'image/svg+xml');
+    const svgEl = svgDoc.documentElement;
+    const w = parseInt(svgEl.getAttribute('width'));
+    const h = parseInt(svgEl.getAttribute('height'));
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    img.onload = function () {
+      ctx.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      canvas.toBlob((b) => resolve(b), 'image/png');
+    };
+    img.src = url;
+  });
+}
+
+async function downloadAll() {
+  const btn = event.target.closest('button');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '⏳ Gerando ZIP...';
+  btn.disabled = true;
+
+  const zip = new JSZip();
+  const capas = zip.folder('capas-destaque');
+  const templates = zip.folder('templates');
+
+  const items = [
+    { key: 'capa-ia-na-pratica', name: 'ia-na-pratica.png', folder: capas },
+    { key: 'capa-encontros', name: 'encontros.png', folder: capas },
+    { key: 'capa-o-movimento', name: 'o-movimento.png', folder: capas },
+    { key: 'capa-comunidade', name: 'comunidade.png', folder: capas },
+    { key: 'template-convite', name: 'convite-encontro.png', folder: templates },
+    { key: 'template-frase', name: 'frase-quote.png', folder: templates },
+    { key: 'template-membro', name: 'apresentacao-membro.png', folder: templates },
+    { key: 'template-registro', name: 'registro-encontro.png', folder: templates },
+    { key: 'template-ia-pratica', name: 'ia-na-pratica.png', folder: templates },
+  ];
+
+  for (const item of items) {
+    const pngBlob = await svgToPngBlob(svgAssets[item.key]);
+    item.folder.file(item.name, pngBlob);
+    // Also add SVG for templates
+    if (item.folder === templates) {
+      const svgName = item.name.replace('.png', '.svg');
+      item.folder.file(svgName, svgAssets[item.key]);
+    }
+  }
+
+  const content = await zip.generateAsync({ type: 'blob' });
+  const a = document.createElement('a');
+  a.download = 'hub-lendario-kit-instagram.zip';
+  a.href = URL.createObjectURL(content);
+  a.click();
+  URL.revokeObjectURL(a.href);
+
+  btn.innerHTML = originalText;
+  btn.disabled = false;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<svg width="1080" height="1920" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1080" height="1920" fill="#0a0a0a"/>
+  <circle cx="540" cy="860" r="120" fill="none" stroke="#c9a84c" stroke-width="3" opacity="0.2"/>
+  <circle cx="540" cy="860" r="80" fill="none" stroke="#c9a84c" stroke-width="2" opacity="0.1"/>
+  <!-- Infinity icon -->
+  <path d="M480 860 C480 835 505 815 530 835 C545 847 555 847 570 835 C595 815 620 835 620 860 C620 885 595 905 570 885 C555 873 545 873 530 885 C505 905 480 885 480 860Z" fill="none" stroke="#f5f5f5" stroke-width="4.5"/>
+  <!-- Title -->
+  <text x="540" y="1020" text-anchor="middle" fill="#f5f5f5" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="48">O Movimento</text>
+  <!-- Accent line -->
+  <rect x="490" y="1050" width="100" height="3" rx="2" fill="#c9a84c"/>
+  <!-- Infinity symbol -->
+  <text x="540" y="1780" text-anchor="middle" fill="#c9a84c" font-size="36" opacity="0.3">♾️</text>
+</svg>
