@@ -125,8 +125,9 @@
     .section-light .bio-block { background: #f0f0f0; border-color: var(--border-light); }
 
     /* TABLES */
-    .table-wrap { overflow-x: auto; margin: 20px 0; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .table-wrap { overflow-x: auto; margin: 20px 0; -ms-overflow-style: none; scrollbar-width: none; }
+    .table-wrap::-webkit-scrollbar { display: none; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; table-layout: auto; word-break: break-word; }
     th { text-align: left; padding: 12px 16px; border-bottom: 2px solid var(--border-dark); font-weight: 600; color: var(--accent); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
     td { padding: 12px 16px; border-bottom: 1px solid var(--border-dark); color: var(--text-muted); }
     .section-light th { border-color: var(--border-light); }
@@ -137,7 +138,8 @@
     /* CODE / MONO */
     code {
       background: rgba(201, 168, 76, 0.1); color: var(--accent);
-      padding: 2px 8px; border-radius: 4px; font-size: 0.85rem; font-family: 'SF Mono', monospace;
+      padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-family: 'SF Mono', monospace;
+      word-break: break-all;
     }
     .section-light code { background: rgba(201, 168, 76, 0.12); }
 
